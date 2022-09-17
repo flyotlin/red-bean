@@ -10,7 +10,7 @@ import (
 )
 
 func OpenImageInCVMat(path string) *gocv.Mat {
-	if !isValidExtension(path) {
+	if !isImgExtensionValid(path) {
 		log.Infof("invalid extension with image [%v]", path)
 		return nil
 	}
@@ -24,7 +24,7 @@ func OpenImageInCVMat(path string) *gocv.Mat {
 }
 
 func OpenImageInFile(path string) *os.File {
-	if !isValidExtension(path) {
+	if !isImgExtensionValid(path) {
 		log.Infof("invalid extension with image [%v]", path)
 		return nil
 	}
@@ -37,14 +37,14 @@ func OpenImageInFile(path string) *os.File {
 	return img
 }
 
-var VALID_EXTENSIONS = []string{".jpg", ".png"}
+var VALID_IMG_EXTENSIONS = []string{".jpg", ".png"}
 
-func isValidExtension(path string) bool {
+func isImgExtensionValid(path string) bool {
 	// Check for image format (for now, only .jpg, .png supported)
 	ext := filepath.Ext(path)
 	ext = strings.ToLower(ext)
 
-	for _, validExt := range VALID_EXTENSIONS {
+	for _, validExt := range VALID_IMG_EXTENSIONS {
 		if ext == validExt {
 			return true
 		}

@@ -11,7 +11,7 @@ func TestIsValidExtensionTrue(t *testing.T) {
 	}
 
 	for _, path := range paths {
-		isValid := isValidExtension(path)
+		isValid := isImgExtensionValid(path)
 		if !isValid {
 			t.Error("This should be valid")
 		}
@@ -24,7 +24,7 @@ func TestIsValidExtensionFalse(t *testing.T) {
 	}
 
 	for _, path := range paths {
-		isValid := isValidExtension(path)
+		isValid := isImgExtensionValid(path)
 		if isValid {
 			t.Error("This should be invalid")
 		}
