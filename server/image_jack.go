@@ -3,13 +3,17 @@ package server
 import (
 	"image"
 
+	"github.com/rwcarlsen/goexif/exif"
 	log "github.com/sirupsen/logrus"
 	"gocv.io/x/gocv"
 )
 
+// TODO: 想一下每個物件實際的職責，Jack 應該專心照顧一個 Image 還是能照顧多個 Image?
+// TODO: ImageJack 提供 Read/Write，用 interface 提供不同種類的行為 (cv.Mat, file)
 type ImageJack struct {
 	Path  string
 	cvMat *gocv.Mat // Originally read from Path, won't be changed
+	ioMgr *ImageIOMgr
 }
 
 func NewImageJack(path string) *ImageJack {
@@ -22,6 +26,7 @@ func NewImageJack(path string) *ImageJack {
 	return &ImageJack{
 		Path:  path,
 		cvMat: mat,
+		ioMgr: ioMgr,
 	}
 }
 
@@ -76,4 +81,50 @@ func (j *ImageJack) SetBrightness(value float32) *gocv.Mat {
 	gocv.CvtColor(hsvImg, &setImg, gocv.ColorHSVToBGR)
 
 	return &setImg
+}
+
+func (j *ImageJack) GetImageFileInfo() map[string]interface{} {
+	infos := make(map[string]interface{})
+
+	infos["Resolution"] = j.cvMat.Size()
+
+	file := j.ioMgr.OpenInFile(j.Path)
+	if file == nil {
+		return nil
+	}
+	defer file.Close()
+
+	stat, err := file.Stat()
+	if err != nil {
+		log.Errorf("failed to get stat of file <%v>: [%v]", j.Path, err.Error())
+		return infos
+	}
+
+	infos["FileName"] = stat.Name()
+	infos["FileSize"] = stat.Size()
+	infos["FileModTime"] = stat.ModTime()
+
+	return infos
+}
+
+func (j *ImageJack) GetExif() map[string]string {
+	file := j.ioMgr.OpenInFile(j.Path)
+	if file == nil {
+		return nil
+	}
+	defer file.Close()
+
+	x, err := exif.Decode(file)
+	if err != nil {
+		log.Errorf("failed to decode exif info from file [%v]: [%v]", j.Path, err.Error())
+		return nil
+	}
+
+	tags := make(map[string]string)
+	tagNames := []string{"Make", "Model", "LensModel", "DateTimeDigitized", "DateTime", "DateTimeOriginal"}
+	for _, name := range tagNames {
+		tags[name] = getExifTag(x, exif.FieldName(name))
+	}
+
+	return tags
 }

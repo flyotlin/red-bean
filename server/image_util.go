@@ -4,6 +4,9 @@ import (
 	"image"
 	"path/filepath"
 	"strings"
+
+	"github.com/rwcarlsen/goexif/exif"
+	log "github.com/sirupsen/logrus"
 )
 
 var VALID_IMG_EXTENSIONS = []string{".jpg", ".png"}
@@ -56,4 +59,13 @@ func clipPoint(p image.Point, clipP image.Point, isAbove bool) image.Point {
 		}
 	}
 	return p
+}
+
+func getExifTag(x *exif.Exif, name exif.FieldName) string {
+	data, err := x.Get(name)
+	if err != nil {
+		log.Infof("field <%v> not found: [%v]", name, err.Error())
+		return ""
+	}
+	return data.String()
 }
