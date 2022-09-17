@@ -86,3 +86,14 @@ func TestCropReturnCorrectSizeWhenOutOfBound(t *testing.T) {
 		assert.Equal(t, expected[i].Y, croppedImg.Size()[0])
 	}
 }
+
+func TestConvertColorSpace(t *testing.T) {
+	jack := NewImageJack("test.png")
+	ioMgr := NewImageIOMgr()
+
+	ioMgr.WriteToFile("orig.png", jack.cvMat)
+
+	cvtImg := jack.ConvertColorSpace(gocv.ColorBGRToGray)
+
+	ioMgr.WriteToFile("cvt.png", cvtImg)
+}

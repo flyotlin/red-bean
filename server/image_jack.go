@@ -52,3 +52,10 @@ func (j *ImageJack) Crop(head image.Point, tail image.Point) *gocv.Mat {
 	croppedImg := j.cvMat.Region(cropRect)
 	return &croppedImg
 }
+
+func (j *ImageJack) ConvertColorSpace(code gocv.ColorConversionCode) *gocv.Mat {
+	// TODO: Check if this image is convertable (at lease 3 channels or so)
+	convertedImg := gocv.NewMat()
+	gocv.CvtColor(*j.cvMat, &convertedImg, code)
+	return &convertedImg
+}
