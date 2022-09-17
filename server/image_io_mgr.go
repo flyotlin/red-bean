@@ -1,7 +1,9 @@
 package server
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
 
 	log "github.com/sirupsen/logrus"
 	"gocv.io/x/gocv"
@@ -40,4 +42,21 @@ func (mgr *ImageIOMgr) OpenInFile(path string) *os.File {
 		return nil
 	}
 	return img
+}
+
+func (mgr *ImageIOMgr) WriteToFile(path string, mat *gocv.Mat) error {
+	dir := filepath.Dir(path)
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		msg := fmt.Sprintf("directory [%v] to write gocv mat not exist: [%v]", dir, err.Error())
+		log.Errorf(msg)
+		return fmt.Errorf(msg)
+	}
+
+	ok := gocv.IMWrite(path, *mat)
+	if !ok {
+		msg := fmt.Sprintf("gocv failed to write to [%v]", path)
+		log.Errorf(msg)
+		return fmt.Errorf(msg)
+	}
+	return nil
 }
