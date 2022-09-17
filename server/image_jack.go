@@ -59,3 +59,21 @@ func (j *ImageJack) ConvertColorSpace(code gocv.ColorConversionCode) *gocv.Mat {
 	gocv.CvtColor(*j.cvMat, &convertedImg, code)
 	return &convertedImg
 }
+
+// Now we convert BGR to HSV (V: 0~180), and set V to change brightness.
+// **WARNING**: If V is over 180, the result would be weird.
+func (j *ImageJack) SetBrightness(value float32) *gocv.Mat {
+	// TODO: Check brightness value
+	hsvImg := gocv.NewMat()
+	defer hsvImg.Close()
+	gocv.CvtColor(*j.cvMat, &hsvImg, gocv.ColorBGRToHSV)
+
+	channels := gocv.Split(hsvImg)
+	channels[2].AddFloat(value)
+
+	gocv.Merge(channels, &hsvImg)
+	setImg := gocv.NewMat()
+	gocv.CvtColor(hsvImg, &setImg, gocv.ColorHSVToBGR)
+
+	return &setImg
+}

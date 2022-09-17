@@ -97,3 +97,14 @@ func TestConvertColorSpace(t *testing.T) {
 
 	ioMgr.WriteToFile("cvt.png", cvtImg)
 }
+
+func TestSetBrightness(t *testing.T) {
+	jack := NewImageJack("test.png")
+	ioMgr := NewImageIOMgr()
+
+	ioMgr.WriteToFile("orig.png", jack.cvMat)
+
+	cvtImg := jack.SetBrightness(20)
+
+	ioMgr.WriteToFile("cvt.png", cvtImg)
+}
