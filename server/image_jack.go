@@ -13,7 +13,8 @@ type ImageJack struct {
 }
 
 func NewImageJack(path string) *ImageJack {
-	mat := OpenImageInCVMat(path)
+	ioMgr := NewImageIOMgr()	// TODO: 加到 jack 裡面
+	mat := ioMgr.OpenInCvMat(path)
 	if mat == nil {
 		log.Error("failed to create ImageJack: [empty cv Mat]")
 	}
