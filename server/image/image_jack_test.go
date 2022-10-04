@@ -1,4 +1,4 @@
-package server
+package image
 
 import (
 	"image"
@@ -88,23 +88,37 @@ func TestCropReturnCorrectSizeWhenOutOfBound(t *testing.T) {
 }
 
 func TestConvertColorSpace(t *testing.T) {
-	jack := NewImageJack("test.png")
+	jack := NewImageJack("/home/flyotlin/Documents/Screen Shot 2022-09-01 at 9.48.55 PM.png")
 	ioMgr := NewImageIOMgr()
 
-	ioMgr.WriteToFile("orig.png", jack.cvMat)
+	ioMgr.WriteToFile("/home/flyotlin/Documents/Program/redbean/server/orig.png", jack.cvMat)
 
 	cvtImg := jack.ConvertColorSpace(gocv.ColorBGRToGray)
 
-	ioMgr.WriteToFile("cvt.png", cvtImg)
+	ioMgr.WriteToFile("/home/flyotlin/Documents/Program/redbean/server/cvt.png", cvtImg)
 }
 
 func TestSetBrightness(t *testing.T) {
-	jack := NewImageJack("test.png")
+	jack := NewImageJack("/home/flyotlin/Documents/Screen Shot 2022-09-01 at 9.48.55 PM.png")
 	ioMgr := NewImageIOMgr()
 
-	ioMgr.WriteToFile("orig.png", jack.cvMat)
+	ioMgr.WriteToFile("/home/flyotlin/Documents/Program/redbean/server/orig.png", jack.cvMat)
 
 	cvtImg := jack.SetBrightness(20)
 
-	ioMgr.WriteToFile("cvt.png", cvtImg)
+	ioMgr.WriteToFile("/home/flyotlin/Documents/Program/redbean/server/cvt.png", cvtImg)
+}
+
+func TestGetImageFileInfo(t *testing.T) {
+	jack := NewImageJack("/mnt/wd1/sony-a6000/2022/2022-08-20/DSC01610.JPG")
+	infos := jack.GetImageFileInfo()
+	t.Log(infos)
+	t.Fail()
+}
+
+func TestGetExif(t *testing.T) {
+	jack := NewImageJack("/mnt/wd1/sony-a6000/2022/2022-08-20/DSC01610.JPG")
+	tags := jack.GetExif()
+	t.Log(tags)
+	t.Fail()
 }
