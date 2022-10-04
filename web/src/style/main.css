@@ -1,0 +1,13 @@
+.image-container {
+    width: 40%;
+    margin: 0 auto;
+    background: white;
+}
+
+.image-container img {
+    width: 100%;
+}
+
+.image-container:hover {
+    cursor: pointer;
+}

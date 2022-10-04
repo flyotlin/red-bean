@@ -1,0 +1,18 @@
+.menu-bar-wrapper {
+    display: flex;
+}
+
+.menu-bar-title {
+    padding: 1rem;
+    font-weight: bolder;
+    font-style: italic;
+}
+
+.menu-bar-item {
+    padding: 1rem;
+}
+
+.menu-bar-item:hover {
+    background-color: #333;
+    cursor: pointer;
+}
