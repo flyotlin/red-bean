@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option go_package = "github.com/flyotlin/red-bean/server/proto";
+
+service ImageService {
+    // GetImageInfo should be called after uploading your image
+    rpc GetImageInfo(ImageInfoRequest) returns (ImageInfoResponse) {}
+}
+
+message ImageInfoRequest {
+    ImageUID uid = 1;
+}
+
+message ImageInfoResponse {
+    Dimension dim = 1;
+    string filename = 2;
+}
+
+message ImageUID {
+    string uid = 1;
+}
+
+message Dimension {
+    int32 width = 1;
+    int32 height = 2;
+}
